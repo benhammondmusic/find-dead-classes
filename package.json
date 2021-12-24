@@ -2,6 +2,23 @@
   "dependencies": {
     "@root/walk": "^1.1.0"
   },
-    "type": "module"
-
+  "type": "module",
+  "name": "@benhammondmusic/dead-css",
+  "version": "1.0.0",
+  "main": "app.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/benhammondmusic/find-dead-classes.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/benhammondmusic/find-dead-classes/issues"
+  },
+  "homepage": "https://github.com/benhammondmusic/find-dead-classes#readme",
+  "description": ""
 }
