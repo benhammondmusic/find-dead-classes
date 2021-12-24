@@ -36,46 +36,56 @@ const walkFunc = async (err, pathname, dirent) => {
 /*
 Collect all scss OR tsx files within PROJECT
 */
-const allSassFiles = []
-const allTsxFiles = []
-await walk(PROJECT, walkFunc);
 
-for (const sassFilePath of allSassFiles) {
-    const sassFileName = sassFilePath.split("/").at(-1)
+function sniff(startingFolder = PROJECT) {
+    const allSassFiles = []
+    const allTsxFiles = []
+    await walk(PROJECT, walkFunc);
 
-    // collect all CLASS DECLARATIONS from the scss
-    const bufferSass = fs.readFileSync(sassFilePath);
-    const sassCode = bufferSass.toString()
-    const regexForClassDeclarations = /[.][A-Z][A-Za-z]+/gm
-    const classDeclarations = sassCode.match(regexForClassDeclarations)
-    if (!classDeclarations) continue
+    for (const sassFilePath of allSassFiles) {
+        const sassFileName = sassFilePath.split("/").at(-1)
 
-    // collect all CLASS CALLS from all .TSX files that import current .SCSS
-    const allClassCalls = []
-    for (const tsxFilePath of allTsxFiles) {
-        const bufferTsx = fs.readFileSync(tsxFilePath);
-        const tsxCode = bufferTsx.toString()
-        const codeLines = tsxCode.split("\n")
-        const importLine = codeLines.find(line=>line.startsWith("import styles from"))
+        // collect all CLASS DECLARATIONS from the scss
+        const bufferSass = fs.readFileSync(sassFilePath);
+        const sassCode = bufferSass.toString()
+        const regexForClassDeclarations = /[.][A-Z][A-Za-z]+/gm
+        const classDeclarations = sassCode.match(regexForClassDeclarations)
+        if (!classDeclarations) continue
 
-        if (importLine?.endsWith(`${sassFileName}";`)) {
-            const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm
-            const foundClassCalls = tsxCode.match(regexForClassCalls).map(style=>style.replace("className={styles", ""))
+        // collect all CLASS CALLS from all .TSX files that import current .SCSS
+        const allClassCalls = []
+        for (const tsxFilePath of allTsxFiles) {
+            const bufferTsx = fs.readFileSync(tsxFilePath);
+            const tsxCode = bufferTsx.toString()
+            const codeLines = tsxCode.split("\n")
+            const importLine = codeLines.find(line=>line.startsWith("import styles from"))
 
-            // construct the DEAD CALLS report
-            const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
-            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n😵 className={styles${item}}`) : "\n✅ALL GOOD!"
-            console.log("\n- DEAD TSX in", tsxFilePath.replace(PROJECT, ""), "-", ...callsMsg);
-            allClassCalls.push(...foundClassCalls)
+            if (importLine?.endsWith(`${sassFileName}";`)) {
+                const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm
+                const foundClassCalls = tsxCode.match(regexForClassCalls).map(style=>style.replace("className={styles", ""))
 
+                // construct the DEAD CALLS report
+                const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
+                const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n😵 className={styles${item}}`) : "\n✅ALL GOOD!"
+                console.log("\n- DEAD TSX in", tsxFilePath.replace(PROJECT, ""), "-", ...callsMsg);
+                allClassCalls.push(...foundClassCalls)
+
+            }
+            if (!allClassCalls) continue
         }
-        if (!allClassCalls) continue
+
+        // construct the DEAD DECLARATIONS report
+        const declarationsWithoutCalls = difference(classDeclarations, allClassCalls)
+        const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n😵 ${item} { ... }`) : "\n✅ALL GOOD!"
+
+        console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*",...declarationsMsg);
+        console.log("\n-------------------------");
+
+        return {
+            deadDeclarations: difference(classDeclarations, allClassCalls),
+            deadCalls: difference(allClassCalls, classDeclarations)
+        }
     }
-
-    // construct the DEAD DECLARATIONS report
-    const declarationsWithoutCalls = difference(classDeclarations, allClassCalls)
-    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n😵 ${item} { ... }`) : "\n✅ALL GOOD!"
-
-    console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*",...declarationsMsg);
-    console.log("\n-------------------------");
 }
+
+exports.sniff = sniff
