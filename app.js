@@ -51,7 +51,7 @@ for (const sassFilePath of allSassFiles) {
     if (!classDeclarations) continue
 
     // collect all CLASS CALLS from all .TSX files that import current .SCSS
-    const classCalls = []
+    const allClassCalls = []
     for (const tsxFilePath of allTsxFiles) {
         const bufferTsx = fs.readFileSync(tsxFilePath);
         const tsxCode = bufferTsx.toString()
@@ -59,21 +59,23 @@ for (const sassFilePath of allSassFiles) {
         const importLine = codeLines.find(line=>line.startsWith("import styles from"))
 
         if (importLine?.endsWith(`${sassFileName}";`)) {
-            const regexForClassCalls = /styles.[A-Z][a-zA-Z]+/gm
-            const foundClassCalls = tsxCode.match(regexForClassCalls).map(style=>style.replace("styles", ""))
-            classCalls.push(...foundClassCalls)
+            const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm
+            const foundClassCalls = tsxCode.match(regexForClassCalls).map(style=>style.replace("className={styles", ""))
+
+            // construct the DEAD CALLS report
+            const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
+            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n😵 className={styles${item}}`) : "\n✅ALL GOOD!"
+            console.log("\n- DEAD TSX in", tsxFilePath.replace(PROJECT, ""), "-", ...callsMsg);
+            allClassCalls.push(...foundClassCalls)
+
         }
-        if (!classCalls) continue
+        if (!allClassCalls) continue
     }
 
-    // construct the report
-    const declarationsWithoutCalls = difference(classDeclarations, classCalls)
-    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n😵 ${item}`) : "\n🤩ALL GOOD!"
-    const callsWithoutDeclarations = difference(classCalls, classDeclarations)
-    const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n😵 ${item}`) : "\n🤩ALL GOOD!"
+    // construct the DEAD DECLARATIONS report
+    const declarationsWithoutCalls = difference(classDeclarations, allClassCalls)
+    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n😵 ${item} { ... }`) : "\n✅ALL GOOD!"
 
+    console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*",...declarationsMsg);
     console.log("\n-------------------------");
-    console.log("FILE:", sassFilePath.replace(PROJECT, ""));
-    console.log("\nDEAD SASS:", ...declarationsMsg);
-    console.log("\nDEAD  TSX:", ...callsMsg);
 }
