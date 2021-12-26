@@ -1,6 +1,7 @@
 TODO
 
 - [ ] come up with a name
+- [ ] add TS
 - [ ] add tests
 - [ ] write a real readme
 - [ ] make it run as a node module
