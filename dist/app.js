@@ -25,7 +25,6 @@ const walkFunc = async (err, pathname, dirent) => {
 };
 await walk(PROJECT, walkFunc);
 for (const sassFilePath of allSassFiles) {
-    console.log(sassFilePath);
     const sassFileName = sassFilePath.split("/").at(-1);
     const bufferSass = readFileSync(sassFilePath);
     const sassCode = bufferSass.toString();
@@ -43,16 +42,18 @@ for (const sassFilePath of allSassFiles) {
             const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm;
             const foundClassCalls = ((_a = tsxCode.match(regexForClassCalls)) === null || _a === void 0 ? void 0 : _a.map(style => style.replace("className={styles", ""))) || [];
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations);
-            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n😵 className={styles${item}}`) : ["\n✅ALL GOOD!"];
-            console.log("\n- DEAD TSX in", tsxFilePath.replace(PROJECT, ""), "-", ...callsMsg);
+            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n😵 className={styles${item}}`) : [""];
+            if (callsWithoutDeclarations.length)
+                console.log("\n- DEAD TSX in", tsxFilePath.replace(PROJECT, ""), "-", ...callsMsg);
             allClassCalls.push(...foundClassCalls);
         }
         if (!allClassCalls)
             continue;
     }
     const declarationsWithoutCalls = difference(classDeclarations, allClassCalls);
-    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item => `\n😵 ${item} { ... }`) : ["\n✅ALL GOOD!"];
-    console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*", ...declarationsMsg);
+    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item => `\n😵 ${item} { ... }`) : [""];
+    if (declarationsWithoutCalls.length)
+        console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*", ...declarationsMsg);
     console.log("\n-------------------------");
 }
 //# sourceMappingURL=app.js.map
