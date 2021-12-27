@@ -42,7 +42,7 @@ const walkFunc = async (err:any, pathname:string, dirent:any) => {
 
 
     if (pathname.endsWith(".scss")) allSassFiles.push(pathname)
-    if (pathname.endsWith(".tsx")) allTsxFiles.push(pathname)
+    if (pathname.endsWith(".tsx") || pathname.endsWith(".jsx")) allTsxFiles.push(pathname)
 };
 
 /*

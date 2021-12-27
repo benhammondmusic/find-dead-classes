@@ -19,7 +19,7 @@
     "type": "git",
     "url": "git+https://github.com/benhammondmusic/find-dead-classes.git"
   },
-  "author": "",
+  "author": "@benhammondmusic",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/benhammondmusic/find-dead-classes/issues"

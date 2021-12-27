@@ -26,6 +26,8 @@ https://user-images.githubusercontent.com/41567007/147434328-a1d543e9-b580-4e6a-
 - [ ] add tests to ensure expected passes/failures for `/test-project`
 - [ ] add more scss/tsx test files to `/test-project`
 - [ ] allow config options (.css, .scss, .ts, .js, .jsx)
+- [ ] allow fo `@uses` and not just `@import`
+- [ ] test on some more real projects
 - [ ] use in Health Equity Tracker as an automated test
 
 
