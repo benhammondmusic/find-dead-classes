@@ -6,7 +6,7 @@
 
 ## To Use
 
-In your terminal, navigate to the directory that contains your project:
+In your terminal, navigate to the directory that contains the existing project you want to check:
 
 `cd code/MySweetProject`
 
@@ -15,14 +15,13 @@ Run the script:
 `npx @benhammondmusic/find-dead-classes`
 
 
+The results will be logged to the console; showing each `.scss` file grouped with any related `.tsx` files
+
 ## TODO
 - [ ] add tests
 - [ ] write a real readme
-- [ ] make it run as a node module
 - [ ] allow config options (.css, .scss, .ts, .js, .jsx)
-- [ ] publish
 - [ ] use in Health Equity Tracker as an automated test
-
 
 
 https://benhammond.tech
