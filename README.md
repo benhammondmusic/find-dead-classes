@@ -17,8 +17,6 @@ The results will be logged to the console; showing each `.scss` file grouped wit
 
 > Example
 
-
-
 https://user-images.githubusercontent.com/41567007/147434328-a1d543e9-b580-4e6a-b21a-d60da2aca15f.mov
 
 
