@@ -42,7 +42,7 @@ for (const sassFilePath of allSassFiles) {
         const codeLines = tsxCode.split("\n");
         const importLine = codeLines.find((line) => line.startsWith("import styles from"));
         if (importLine?.endsWith(`${sassFileName}";`)) {
-            const regexForClassCalls = /styles.[A-Z][a-zA-Z]+/gm;
+            const regexForClassCalls = /styles[.][A-Z][a-zA-Z]+/gm;
             const foundClassCalls = tsxCode.match(regexForClassCalls)?.map((style) => style.replace("styles", "")) || [];
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations);
             const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n\t\t‣ styles${item}`) : [""];

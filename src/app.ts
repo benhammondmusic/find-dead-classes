@@ -71,7 +71,7 @@ for (const sassFilePath of allSassFiles) {
         const importLine = codeLines.find((line: string)=>line.startsWith("import styles from"))
 
         if (importLine?.endsWith(`${sassFileName}";`)) {
-            const regexForClassCalls = /styles.[A-Z][a-zA-Z]+/gm
+            const regexForClassCalls = /styles[.][A-Z][a-zA-Z]+/gm
             const foundClassCalls: string[] = tsxCode.match(regexForClassCalls)?.map((style: string)=>style.replace("styles", "")) || []
 
             // construct the DEAD CALLS report
