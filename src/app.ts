@@ -80,8 +80,6 @@ for (const sassFilePath of allSassFiles) {
             const foundClassCalls: string[] = tsxCode.match(regexForClassCalls)?.map((style: string)=>style.replace("styles", "")) || []
 
             // construct the DEAD CALLS report
-            console.log("Found class calls",foundClassCalls)
-            console.log("Found class declarations", classDeclarations);
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
             const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n\t\t‣ styles${item}`) : [""]
             if (callsWithoutDeclarations.length) console.log("\n\t😵 (POTENTIALLY) DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
