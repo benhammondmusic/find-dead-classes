@@ -9,6 +9,8 @@ export {}
 const PROJECT = process.argv?.[2] || "./"
 const allSassFiles: string[] = []
 const allTsxFiles: string[] = []
+let allDeadCalls: string[] =[]
+let allDeadDeclarations: string[] = []
 
 
 
@@ -76,6 +78,9 @@ for (const sassFilePath of allSassFiles) {
 
             // construct the DEAD CALLS report
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
+            allDeadCalls.push(...callsWithoutDeclarations)
+
+
             const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n\t\t‣ styles${item}`) : [""]
             if (callsWithoutDeclarations.length) console.log("\n\t😵 (POTENTIALLY) DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
             allClassCalls.push(...foundClassCalls)
@@ -86,12 +91,19 @@ for (const sassFilePath of allSassFiles) {
 
     // construct the DEAD DECLARATIONS report
     const declarationsWithoutCalls = difference(classDeclarations, allClassCalls)
-    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n\t\t‣ ${item} { ... }`) : [""]
 
+    allDeadDeclarations.push(...declarationsWithoutCalls)
+
+    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n\t\t‣ ${item} { ... }`) : [""]
     if (declarationsWithoutCalls.length) console.log("\n\t😵 (POTENTIALLY) DEAD SASS in", sassFilePath.replace(PROJECT, ""),...declarationsMsg);
 
 
 
 }
 
-console.log("\n\nFinished Reporting Dead Classes\n\n");
+console.log(`\n\nFinished Reporting Dead Classes. Checked: \n‣ ${allSassFiles.length} .scss file(s) \n‣ ${allTsxFiles.length} .tsx/.jsx file(s) \n\n Found: \n‣ ${allDeadDeclarations.length} potentially dead class declarations \n‣ ${allDeadCalls.length} potentially dead class calls`);
+
+
+export default function countDeadClasses(){
+    return {allDeadCalls, allDeadDeclarations}
+}

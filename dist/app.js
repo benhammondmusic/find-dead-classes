@@ -4,6 +4,8 @@ import { readFileSync } from "fs";
 const PROJECT = process.argv?.[2] || "./";
 const allSassFiles = [];
 const allTsxFiles = [];
+let allDeadCalls = [];
+let allDeadDeclarations = [];
 function difference(leftArray, rightArray) {
     let _difference = new Set(leftArray);
     for (let elem of rightArray) {
@@ -45,6 +47,7 @@ for (const sassFilePath of allSassFiles) {
             const regexForClassCalls = /styles[.][A-Z][a-zA-Z]+/gm;
             const foundClassCalls = tsxCode.match(regexForClassCalls)?.map((style) => style.replace("styles", "")) || [];
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations);
+            allDeadCalls.push(...callsWithoutDeclarations);
             const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n\t\t‣ styles${item}`) : [""];
             if (callsWithoutDeclarations.length)
                 console.log("\n\t😵 (POTENTIALLY) DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
@@ -54,9 +57,13 @@ for (const sassFilePath of allSassFiles) {
             continue;
     }
     const declarationsWithoutCalls = difference(classDeclarations, allClassCalls);
+    allDeadDeclarations.push(...declarationsWithoutCalls);
     const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item => `\n\t\t‣ ${item} { ... }`) : [""];
     if (declarationsWithoutCalls.length)
         console.log("\n\t😵 (POTENTIALLY) DEAD SASS in", sassFilePath.replace(PROJECT, ""), ...declarationsMsg);
 }
-console.log("\n\nFinished Reporting Dead Classes\n\n");
+console.log(`\n\nFinished Reporting Dead Classes. Checked: \n‣ ${allSassFiles.length} .scss file(s) \n‣ ${allTsxFiles.length} .tsx/.jsx file(s) \n\n Found: \n‣ ${allDeadDeclarations.length} potentially dead class declarations \n‣ ${allDeadCalls.length} potentially dead class calls`);
+export default function countDeadClasses() {
+    return { allDeadCalls, allDeadDeclarations };
+}
 //# sourceMappingURL=app.js.map
