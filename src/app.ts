@@ -1,10 +1,21 @@
+#! /usr/bin/env node
+
+// require = require('esm')(module /*, options*/);
+// require('../src/cli').cli(process.argv);
+
 // Index all files in a folder/sub folders
 import { walk } from "@root/walk";
+// const walk = require("@root/walk")
 import { readFileSync } from "fs"
+// const readFileSync = require("fs")
 
-const PROJECT = "../health-equity-tracker/frontend"
+export {}
+
+const PROJECT = process.argv?.[2] || "./"
 const allSassFiles: string[] = []
 const allTsxFiles: string[] = []
+
+
 
 /*
 Accepts two Arrays
@@ -37,6 +48,8 @@ const walkFunc = async (err:any, pathname:string, dirent:any) => {
 /*
 Collect all scss OR tsx files within PROJECT
 */
+
+// @ts-ignore - top-level await is working
 await walk(PROJECT, walkFunc);
 
 for (const sassFilePath of allSassFiles) {
@@ -55,11 +68,11 @@ for (const sassFilePath of allSassFiles) {
         const bufferTsx = readFileSync(tsxFilePath);
         const tsxCode = bufferTsx.toString()
         const codeLines = tsxCode.split("\n")
-        const importLine = codeLines.find(line=>line.startsWith("import styles from"))
+        const importLine = codeLines.find((line: string)=>line.startsWith("import styles from"))
 
         if (importLine?.endsWith(`${sassFileName}";`)) {
             const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm
-            const foundClassCalls: string[] = tsxCode.match(regexForClassCalls)?.map(style=>style.replace("className={styles", "")) || []
+            const foundClassCalls: string[] = tsxCode.match(regexForClassCalls)?.map((style: string)=>style.replace("className={styles", "")) || []
 
             // construct the DEAD CALLS report
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
@@ -79,4 +92,7 @@ for (const sassFilePath of allSassFiles) {
     console.log("\n-------------------------");
 
 
+
 }
+
+console.log("\n\nFinished Reporting Dead Classes\n\n");

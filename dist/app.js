@@ -1,7 +1,7 @@
-var _a;
+#! /usr/bin/env node
 import { walk } from "@root/walk";
 import { readFileSync } from "fs";
-const PROJECT = "../health-equity-tracker/frontend";
+const PROJECT = process.argv?.[2] || "./";
 const allSassFiles = [];
 const allTsxFiles = [];
 function difference(leftArray, rightArray) {
@@ -37,10 +37,10 @@ for (const sassFilePath of allSassFiles) {
         const bufferTsx = readFileSync(tsxFilePath);
         const tsxCode = bufferTsx.toString();
         const codeLines = tsxCode.split("\n");
-        const importLine = codeLines.find(line => line.startsWith("import styles from"));
-        if (importLine === null || importLine === void 0 ? void 0 : importLine.endsWith(`${sassFileName}";`)) {
+        const importLine = codeLines.find((line) => line.startsWith("import styles from"));
+        if (importLine?.endsWith(`${sassFileName}";`)) {
             const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm;
-            const foundClassCalls = ((_a = tsxCode.match(regexForClassCalls)) === null || _a === void 0 ? void 0 : _a.map(style => style.replace("className={styles", ""))) || [];
+            const foundClassCalls = tsxCode.match(regexForClassCalls)?.map((style) => style.replace("className={styles", "")) || [];
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations);
             const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n😵 className={styles${item}}`) : [""];
             if (callsWithoutDeclarations.length)
@@ -56,4 +56,5 @@ for (const sassFilePath of allSassFiles) {
         console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*", ...declarationsMsg);
     console.log("\n-------------------------");
 }
+console.log("\n\nFinished Reporting Dead Classes\n\n");
 //# sourceMappingURL=app.js.map

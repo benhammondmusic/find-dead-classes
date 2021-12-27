@@ -3,7 +3,10 @@
   "dependencies": {
     "@root/walk": "^1.1.0"
   },
-  "name": "@benhammondmusic/dead-css",
+  "bin": {
+    "run": "bin/app.js"
+},
+  "name": "@benhammondmusic/find-dead-classes",
   "version": "1.0.0",
   "main": "app.js",
   "devDependencies": {
@@ -24,5 +27,5 @@
     "url": "https://github.com/benhammondmusic/find-dead-classes/issues"
   },
   "homepage": "https://github.com/benhammondmusic/find-dead-classes#readme",
-  "description": ""
+  "description": "Simple tool that compares a directory's .scss and .tsx files, and reports the dead class calls and/or declarations."
 }
