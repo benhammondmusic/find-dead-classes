@@ -3,9 +3,7 @@
   "dependencies": {
     "@root/walk": "^1.1.0"
   },
-  "bin": {
-    "run": "bin/app.js"
-  },
+  "bin": "dist/app.js",
   "name": "@benhammondmusic/find-dead-classes",
   "version": "1.0.1",
   "main": "app.js",
