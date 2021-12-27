@@ -1,8 +1,6 @@
 # Find Dead Classes 😵
 
-## Simple tool that compares a directory's `.scss` and `.tsx` files, and reports the "dead" code.
-
-> "Dead" meaning a class declaration like `.CoolText {}` that is never called in a component, or a class call like `className={styles.AwesomeText}` that is not declared in any style file.
+Simple tool that compares a directory's `.scss` and `.tsx` files, and reports the "dead" code, meaning a class declaration like `.CoolText {}` that is never called in a component, or a class call like `className={styles.AwesomeText}` that is not declared in any style file.
 
 ## To Use
 
