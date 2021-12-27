@@ -104,6 +104,6 @@ for (const sassFilePath of allSassFiles) {
 console.log(`\n\nFinished Reporting Dead Classes. Checked: \n‣ ${allSassFiles.length} .scss file(s) \n‣ ${allTsxFiles.length} .tsx/.jsx file(s) \n\n Found: \n‣ ${allDeadDeclarations.length} potentially dead class declarations \n‣ ${allDeadCalls.length} potentially dead class calls`);
 
 
-export default function countDeadClasses(){
+export function countDeadClasses(){
     return {allDeadCalls, allDeadDeclarations}
 }
