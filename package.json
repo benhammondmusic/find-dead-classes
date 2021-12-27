@@ -5,7 +5,7 @@
   },
   "bin": "dist/app.js",
   "name": "@benhammondmusic/find-dead-classes",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "app.js",
   "devDependencies": {
     "@types/node": "^17.0.4",
