@@ -1,13 +1,8 @@
 #! /usr/bin/env node
 
-// require = require('esm')(module /*, options*/);
-// require('../src/cli').cli(process.argv);
-
 // Index all files in a folder/sub folders
 import { walk } from "@root/walk";
-// const walk = require("@root/walk")
 import { readFileSync } from "fs"
-// const readFileSync = require("fs")
 
 export {}
 

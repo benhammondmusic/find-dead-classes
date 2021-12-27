@@ -44,12 +44,10 @@ for (const sassFilePath of allSassFiles) {
         if (importLine?.endsWith(`${sassFileName}";`)) {
             const regexForClassCalls = /styles.[A-Z][a-zA-Z]+/gm;
             const foundClassCalls = tsxCode.match(regexForClassCalls)?.map((style) => style.replace("styles", "")) || [];
-            console.log("Found class calls", foundClassCalls);
-            console.log("Found class declarations", classDeclarations);
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations);
             const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n\t\t‣ styles${item}`) : [""];
             if (callsWithoutDeclarations.length)
-                console.log("\n\t😵 DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
+                console.log("\n\t😵 (POTENTIALLY) DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
             allClassCalls.push(...foundClassCalls);
         }
         if (!allClassCalls)
@@ -58,7 +56,7 @@ for (const sassFilePath of allSassFiles) {
     const declarationsWithoutCalls = difference(classDeclarations, allClassCalls);
     const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item => `\n\t\t‣ ${item} { ... }`) : [""];
     if (declarationsWithoutCalls.length)
-        console.log("\n\t😵 DEAD SASS in", sassFilePath.replace(PROJECT, ""), ...declarationsMsg);
+        console.log("\n\t😵 (POTENTIALLY) DEAD SASS in", sassFilePath.replace(PROJECT, ""), ...declarationsMsg);
 }
 console.log("\n\nFinished Reporting Dead Classes\n\n");
 //# sourceMappingURL=app.js.map
