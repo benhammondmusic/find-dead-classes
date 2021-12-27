@@ -17,9 +17,12 @@ Run the script:
 
 The results will be logged to the console; showing each `.scss` file grouped with any related `.tsx` files
 
+> Example
+https://user-images.githubusercontent.com/41567007/147434165-1b5547e1-76fc-45af-a1cf-a993d3513cb2.mov
+
 
 ## TODO
-- [ ] make script return {deadClasses: [...], deadDeclarations: [...]}
+- [ ] make script return `{deadClasses: [...], deadDeclarations: [...]}`
 - [ ] add tests to ensure expected passes/failures for `/test-project`
 - [ ] add more scss/tsx test files to `/test-project`
 - [ ] allow config options (.css, .scss, .ts, .js, .jsx)
