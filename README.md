@@ -18,8 +18,9 @@ Run the script:
 The results will be logged to the console; showing each `.scss` file grouped with any related `.tsx` files
 
 ## TODO
-- [ ] add tests
-- [ ] write a real readme
+- [ ] make script return {deadClasses: [...], deadDeclarations: [...]}
+- [ ] add tests to ensure expected passes/failures for `/test-project`
+- [ ] add more scss/tsx test files to `/test-project`
 - [ ] allow config options (.css, .scss, .ts, .js, .jsx)
 - [ ] use in Health Equity Tracker as an automated test
 
