@@ -55,6 +55,11 @@ await walk(PROJECT, walkFunc);
 for (const sassFilePath of allSassFiles) {
     const sassFileName = sassFilePath.split("/").at(-1)
 
+    console.log("\n\n\n-------------------------");
+    console.log(sassFileName);
+    console.log("-------------------------");
+
+
     // collect all CLASS DECLARATIONS from the scss
     const bufferSass = readFileSync(sassFilePath);
     const sassCode = bufferSass.toString()
@@ -76,8 +81,8 @@ for (const sassFilePath of allSassFiles) {
 
             // construct the DEAD CALLS report
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
-            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n😵 className={styles${item}}`) : [""]
-            if (callsWithoutDeclarations.length) console.log("\n- DEAD TSX in", tsxFilePath.replace(PROJECT, ""), "-", ...callsMsg);
+            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n\t\t‣ className={styles${item}}`) : [""]
+            if (callsWithoutDeclarations.length) console.log("\n\t😵 DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
             allClassCalls.push(...foundClassCalls)
 
         }
@@ -86,10 +91,9 @@ for (const sassFilePath of allSassFiles) {
 
     // construct the DEAD DECLARATIONS report
     const declarationsWithoutCalls = difference(classDeclarations, allClassCalls)
-    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n😵 ${item} { ... }`) : [""]
+    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item=>`\n\t\t‣ ${item} { ... }`) : [""]
 
-    if (declarationsWithoutCalls.length) console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*",...declarationsMsg);
-    console.log("\n-------------------------");
+    if (declarationsWithoutCalls.length) console.log("\n\t😵 DEAD SASS in", sassFilePath.replace(PROJECT, ""),...declarationsMsg);
 
 
 

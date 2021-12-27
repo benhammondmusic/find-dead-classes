@@ -26,6 +26,9 @@ const walkFunc = async (err, pathname, dirent) => {
 await walk(PROJECT, walkFunc);
 for (const sassFilePath of allSassFiles) {
     const sassFileName = sassFilePath.split("/").at(-1);
+    console.log("\n\n\n-------------------------");
+    console.log(sassFileName);
+    console.log("-------------------------");
     const bufferSass = readFileSync(sassFilePath);
     const sassCode = bufferSass.toString();
     const regexForClassDeclarations = /[.][A-Z][A-Za-z]+/gm;
@@ -42,19 +45,18 @@ for (const sassFilePath of allSassFiles) {
             const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm;
             const foundClassCalls = tsxCode.match(regexForClassCalls)?.map((style) => style.replace("className={styles", "")) || [];
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations);
-            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n😵 className={styles${item}}`) : [""];
+            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item => `\n\t\t‣ className={styles${item}}`) : [""];
             if (callsWithoutDeclarations.length)
-                console.log("\n- DEAD TSX in", tsxFilePath.replace(PROJECT, ""), "-", ...callsMsg);
+                console.log("\n\t😵 DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
             allClassCalls.push(...foundClassCalls);
         }
         if (!allClassCalls)
             continue;
     }
     const declarationsWithoutCalls = difference(classDeclarations, allClassCalls);
-    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item => `\n😵 ${item} { ... }`) : [""];
+    const declarationsMsg = declarationsWithoutCalls.length ? declarationsWithoutCalls.map(item => `\n\t\t‣ ${item} { ... }`) : [""];
     if (declarationsWithoutCalls.length)
-        console.log("\n* DEAD SASS in", sassFilePath.replace(PROJECT, ""), "*", ...declarationsMsg);
-    console.log("\n-------------------------");
+        console.log("\n\t😵 DEAD SASS in", sassFilePath.replace(PROJECT, ""), ...declarationsMsg);
 }
 console.log("\n\nFinished Reporting Dead Classes\n\n");
 //# sourceMappingURL=app.js.map
