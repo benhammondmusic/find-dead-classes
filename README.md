@@ -16,7 +16,11 @@ Run the script:
 The results will be logged to the console; showing each `.scss` file grouped with any related `.tsx` files
 
 > Example
-https://user-images.githubusercontent.com/41567007/147434165-1b5547e1-76fc-45af-a1cf-a993d3513cb2.mov
+
+
+
+https://user-images.githubusercontent.com/41567007/147434328-a1d543e9-b580-4e6a-b21a-d60da2aca15f.mov
+
 
 
 ## TODO
