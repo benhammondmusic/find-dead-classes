@@ -76,12 +76,12 @@ for (const sassFilePath of allSassFiles) {
         const importLine = codeLines.find((line: string)=>line.startsWith("import styles from"))
 
         if (importLine?.endsWith(`${sassFileName}";`)) {
-            const regexForClassCalls = /className={styles.[A-Z][a-zA-Z]+/gm
-            const foundClassCalls: string[] = tsxCode.match(regexForClassCalls)?.map((style: string)=>style.replace("className={styles", "")) || []
+            const regexForClassCalls = /styles.[A-Z][a-zA-Z]+/gm
+            const foundClassCalls: string[] = tsxCode.match(regexForClassCalls)?.map((style: string)=>style.replace("styles", "")) || []
 
             // construct the DEAD CALLS report
             const callsWithoutDeclarations = difference(foundClassCalls, classDeclarations)
-            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n\t\t‣ className={styles${item}}`) : [""]
+            const callsMsg = callsWithoutDeclarations.length ? callsWithoutDeclarations.map(item=>`\n\t\t‣ styles${item}}`) : [""]
             if (callsWithoutDeclarations.length) console.log("\n\t😵 DEAD TSX in", tsxFilePath.replace(PROJECT, ""), ...callsMsg);
             allClassCalls.push(...foundClassCalls)
 
